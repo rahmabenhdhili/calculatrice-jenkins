@@ -1,8 +1,12 @@
 pipeline {
     agent any
 
-    environment {
-        ENV = "dev"
+    parameters {
+        choice(
+            name: 'ENV',
+            choices: ['dev', 'test', 'prod'],
+            description: 'Choisissez l’environnement'
+        )
     }
 
     stages {
@@ -16,10 +20,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // créer le dossier
+                    // créer le dossier correspondant à l'environnement choisi
                     bat "if not exist output\\%ENV% mkdir output\\%ENV%"
 
-                    // copier seulement les fichiers, PAS tout le workspace
+                    // copier uniquement les fichiers nécessaires
                     bat "copy /Y index.html output\\%ENV%\\"
                     bat "copy /Y script.js output\\%ENV%\\"
                     bat "copy /Y style.css output\\%ENV%\\"
