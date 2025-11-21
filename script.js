@@ -1,7 +1,7 @@
-let display = document.getElementById('display');
+const display = document.getElementById('display');
 
-function appendNumber(num) {
-    display.value += num;
+function appendValue(val) {
+    display.value += val;
 }
 
 function clearDisplay() {
