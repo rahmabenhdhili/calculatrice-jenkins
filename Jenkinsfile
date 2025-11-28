@@ -5,32 +5,39 @@ pipeline {
         choice(
             name: 'ENV',
             choices: ['dev', 'test', 'prod'],
-            description: 'Choisissez l’environnement'
+            description: 'Choisissez l’environnement de déploiement'
         )
     }
 
     stages {
+
         stage('Build') {
             steps {
-                echo "Vérification des fichiers du projet..."
+                echo "📦 Vérification des fichiers du projet..."
                 bat "dir"
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                echo "🧪 Exécution des tests automatisés..."
+                bat "node test.js"
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
-                    // créer le dossier correspondant à l'environnement choisi
-                    bat "if not exist output\\%ENV% mkdir output\\%ENV%"
+                echo "🚀 Déploiement vers l’environnement : %ENV%"
 
-                    // copier uniquement les fichiers nécessaires
+                script {
+                    bat "if not exist output\\%ENV% mkdir output\\%ENV%"
                     bat "copy /Y index.html output\\%ENV%\\"
                     bat "copy /Y script.js output\\%ENV%\\"
                     bat "copy /Y style.css output\\%ENV%\\"
                     bat "copy /Y test.js output\\%ENV%\\"
-
-                    echo "Déploiement terminé dans output/%ENV%"
                 }
+
+                echo "Déploiement terminé dans output/%ENV%"
             }
         }
     }
